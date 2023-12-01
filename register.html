@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Registration Page</title>
+    <link rel="stylesheet" type="text/css" href="css/bootstrap.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"/>
+  </head>
+  <body>
+    <div class="container">
+      <div class="row col-md-6 col-md-offset-3">
+        <div class="panel panel-primary">
+          <div class="panel-heading text-center">
+            <h1>Registration Form</h1>
+          </div>
+          <div class="panel-body">
+            <form action="connect.php" method="post" onsubmit="return validatePassword()";>
+              <div class="form-group">
+                <label for="firstName">First Name</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="firstName"
+                  name="firstName"
+                  required
+                  pattern="^[A-Za-z\s]+$"
+                  title="Please enter a valid first name (letters and spaces only)"
+                />
+              </div>
+              <div class="form-group">
+                <label for="lastName">Last Name</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="lastName"
+                  name="lastName"
+                  required
+                  pattern="^[A-Za-z\s]+$"
+                  title="Please enter a valid first name (letters and spaces only)"
+                />
+              </div>
+              <div class="form-group">
+                <label for="gender">Gender</label>
+                <div>
+                  <label for="male" class="radio-inline">
+                    <input
+                      type="radio"
+                      name="gender"
+                      value="m"
+                      id="male"
+                      required title="Please select a gender."
+                    />Male</label>
+                  <label for="female" class="radio-inline">
+                    <input
+                      type="radio"
+                      name="gender"
+                      value="f"
+                      id="female"
+                      required title="Please select a gender."
+                    />Female</label>
+                  <label for="others" class="radio-inline">
+                    <input
+                      type="radio"
+                      name="gender"
+                      value="o"
+                      id="others"
+                      required title="Please select a gender."
+                    />Others
+                  </label>
+                </div>
+                <p style="color: red;" id="gender-error" class="error-message"></p>
+              </div>
+              <div class="form-group">
+                <label for="email">Email</label>
+                <input
+                    type="email"
+                    class="form-control"
+                    id="email"
+                    name="email"
+                    required
+                    pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}"
+                    oninvalid="setCustomValidity('Please enter a valid email address (e.g., example@example.com)')"
+                    oninput="setCustomValidity('')"
+                />
+            </div>
+              <div class="form-group">
+                <label for="password">Password</label>
+                <div class="input-group">
+                  <input
+                      type="password"
+                      class="form-control"
+                      id="password"
+                      name="password"
+                      required
+                      pattern=^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@#$%^&*?])[A-Za-z\d!@#$%^&*?]{8,}$
+                      title="Password must be at least 8 characters long and contain at least one uppercase letter and one special character (@#$%^&*?)"
+                  />
+                  <div class="input-group-append">
+                      <span class="input-group-text">
+                          <i
+                              id="togglePassword"
+                              class="fa fa-eye-slash"
+                              onclick="togglePasswordVisibility()"
+                          ></i>
+                      </span>
+                  </div>
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="confirmPassword">Confirm Password</label>
+                <input
+                    type="password"
+                    class="form-control"
+                    id="confirmPassword"
+                    name="confirmPassword"
+                    required
+                    title = "Passwords do not match."
+                />
+              </div>
+              <div class="form-group">
+                <label for="number">Phone Number</label>
+                <input
+                  type="tel"
+                  class="form-control"
+                  id="number"
+                  name="number"
+                  pattern="[0-9]{10}"
+                  title="Please enter a 10-digit phone number"
+                  required
+                />
+              </div>
+              <div class="text-center">
+              <input type="submit" class="btn btn-primary" />
+              </div>
+            </form>
+          </div>
+          <div class="panel-footer text-right">
+            <small>&copy; ResBil</small>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+</div>
+
+<script>
+  function togglePasswordVisibility() {
+      var passwordField = document.getElementById("password");
+      var toggleIcon = document.getElementById("togglePassword");
+
+      if (passwordField.type === "password") {
+          passwordField.type = "text";
+          toggleIcon.className = "fa fa-eye";
+      } else {
+          passwordField.type = "password";
+          toggleIcon.className = "fa fa-eye-slash";
+      }
+  }
+
+  function validatePassword() {
+        var password = document.getElementById("password").value;
+        var confirmPassword = document.getElementById("confirmPassword").value;
+
+        if (password !== confirmPassword) {
+            alert("Password and Confirm Password do not match.");
+            return false;
+        }
+        return true;
+  }
+  </script>
+  </body>
+</html>

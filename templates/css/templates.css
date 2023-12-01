@@ -1,0 +1,34 @@
+/* templates.css */
+
+/* Apply the color theme */
+body {
+    background-color: #f5f5f5;
+    color: #000;
+}
+
+.container {
+    display: flex; /* Use a flex container to arrange templates horizontally */
+    justify-content: space-around; /* Adjust the alignment as needed */
+    align-items: center;
+    padding: 20px; /* Add padding to the container as needed */
+}
+
+.template {
+    background-color: #fff; /* Background color for the templates */
+    border: 1px solid #ccc;
+    padding: 10px;
+    cursor: pointer;
+    text-align: center;
+    margin: 10px; /* Add margin for spacing between cards */
+    max-width: 200px; /* Set a maximum width for the cards */
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); /* Optional: Add a subtle shadow */
+}
+
+.template img {
+    max-width: 100%;
+    height: auto;
+}
+
+.template:hover {
+    background-color: #f0f0f0;
+}
