@@ -1,4 +1,4 @@
-function updatePreview() {
+function updatePersonalInfo(fieldId, fieldValue) {
   // Get input values for personal information
   var firstName = document.getElementById("first-name").value;
   var lastName = document.getElementById("last-name").value;
@@ -8,32 +8,45 @@ function updatePreview() {
 
   // Update the preview content for personal information
   var hp = document.getElementById("view");
-  hp.innerHTML = `
-      <div class="full-name">
-        <span class="first-name">${firstName}</span>
-        <span class="last-name">${lastName}</span>
-      </div>
-      <div class="contact-info">
-        <span class="email">Email: </span>
-        <span class="email-val">${email}</span>
-        <span class="separator"></span>
-        <span class="phone">Phone: </span>
-        <span class="phone-val">${phone}</span>
-      </div>
 
-      <div class="about">
-        <span class="section__title">Bio</span><br>
-        <span class="desc">${bio}</span>
-      </div>
-  `;
+  switch (fieldId) {
+    case "first-name":
+      hp.querySelector(".first-name").textContent = fieldValue;
+      break;
+    case "last-name":
+      hp.querySelector(".last-name").textContent = fieldValue;
+      break;
+    case "email":
+      hp.querySelector(".email-val").textContent = fieldValue;
+      break;
+    case "phone":
+      hp.querySelector(".phone-val").textContent = fieldValue;
+      break;
+    case "bio":
+      hp.querySelector(".desc").textContent = fieldValue;
+      break;
+    default:
+      break;
+  }
+}
 
-  // Update experience preview
+var addedExperiences = [
+  {
+    orgname: "",
+    orgadd: "",
+    tnr: "",
+    role: "",
+    activity: "",
+  },
+];
+
+function updateExperiencePreview() {
   var exp_p = document.getElementById("experience-preview");
   exp_p.innerHTML =
     '<div class="section__title">Experience</div><div class="section__list">';
 
   // Loop through added experiences and update the preview
-  addedExperiences.forEach(function (experience) {
+  addedExperiences.forEach(function (experience, index) {
     var orgname = experience.orgname;
     var orgadd = experience.orgadd;
     var tnr = experience.tnr;
@@ -55,11 +68,59 @@ function updatePreview() {
     </div>
     <br/>
   `;
+
+    // Add an event listener for each field to update only the corresponding section
+    document
+      .getElementById(`orgname${index + 1}`)
+      .addEventListener("input", function () {
+        exp_p.querySelector(`#orgname${index + 1} .name`).innerHTML =
+          this.value;
+      });
+
+    document
+      .getElementById(`orgadd${index + 1}`)
+      .addEventListener("input", function () {
+        exp_p.querySelector(`#orgadd${index + 1} .addr`).innerHTML = this.value;
+      });
+
+    document
+      .getElementById(`tnr${index + 1}`)
+      .addEventListener("input", function () {
+        exp_p.querySelector(`#tnr${index + 1} .duration`).innerHTML =
+          this.value;
+      });
+
+    document
+      .getElementById(`role${index + 1}`)
+      .addEventListener("input", function () {
+        exp_p.querySelector(`#role${index + 1} .name`).innerHTML = this.value;
+      });
+
+    document
+      .getElementById(`activity${index + 1}`)
+      .addEventListener("input", function () {
+        exp_p.querySelector(`#activity${index + 1} .desc`).innerHTML =
+          this.value;
+      });
   });
 
   exp_p.innerHTML += "</div></div>"; // Close the Experience section
+}
 
-  // Update education preview
+function updateExperience(index) {
+  var experience = addedExperiences[index - 1];
+
+  // Update the corresponding properties in the experience object
+  experience.orgname = document.getElementById(`orgname${index}`).value;
+  experience.orgadd = document.getElementById(`orgadd${index}`).value;
+  experience.tnr = document.getElementById(`tnr${index}`).value;
+  experience.role = document.getElementById(`role${index}`).value;
+  experience.activity = document.getElementById(`activity${index}`).value;
+
+  updateExperiencePreview(); // Update the preview after each input change
+}
+
+function updateEducationPreview() {
   var edu_p = document.getElementById("education-preview");
   edu_p.innerHTML =
     '<div class="section__title">Education</div><div class="section__list">';
@@ -82,8 +143,9 @@ function updatePreview() {
   });
 
   edu_p.innerHTML += "</div></div>"; // Close the Education section
+}
 
-  // Update projects preview
+function updateProjectsPreview() {
   var proj_p = document.getElementById("projects-preview");
   proj_p.innerHTML =
     '<div class="section__title">Projects</div><div class="section__list">';
@@ -102,8 +164,9 @@ function updatePreview() {
   });
 
   proj_p.innerHTML += "</div></div>"; // Close the Projects section
+}
 
-  // Update skills preview
+function updateSkillsPreview() {
   var skills_p = document.getElementById("skills-preview");
   skills_p.innerHTML =
     '<div class="section__title">Skills</div><div class="skills">';
@@ -123,15 +186,18 @@ function updatePreview() {
   skills_p.innerHTML += "</div></div>"; // Close the Skills section
 }
 
-var addedExperiences = [
-  {
-    orgname: "",
-    orgadd: "",
-    tnr: "",
-    role: "",
-    activity: "",
-  },
-];
+function updatePreview() {
+  updatePersonalInfo();
+  updateExperiencePreview();
+  updateEducationPreview();
+  updateProjectsPreview();
+  updateSkillsPreview();
+  var container = document.querySelector(".container");
+
+  // Set the top position dynamically based on the scroll position
+  var scrollTop = window.scrollY || document.documentElement.scrollTop;
+  container.style.top = scrollTop + 10 + "px";
+}
 
 var experienceCounter = 1; // Counter for unique IDs
 
@@ -155,19 +221,19 @@ function addExperience() {
   newExperience.innerHTML = `
     <div>
       <label>Organisation Name:</label>
-      <input type="text" id="orgname${experienceCounter}" oninput="updateExperience(${experienceCounter})"/>
+      <input type="text" id="orgname${experienceCounter}" oninput="updateExperiencePreview(${experienceCounter})"/>
       <br>
       <label>Organisation Address:</label>
-      <input type="text" id="orgadd${experienceCounter}" oninput="updateExperience(${experienceCounter})"/>
+      <input type="text" id="orgadd${experienceCounter}" oninput="updateExperiencePreview(${experienceCounter})"/>
       <br>
       <label>Tenure:</label>
-      <input type="text" id="tnr${experienceCounter}" oninput="updateExperience(${experienceCounter})"/>
+      <input type="text" id="tnr${experienceCounter}" oninput="updateExperiencePreview(${experienceCounter})"/>
       <br>
       <label>Role:</label>
-      <input type="text" id="role${experienceCounter}" oninput="updateExperience(${experienceCounter})"/>
+      <input type="text" id="role${experienceCounter}" oninput="updateExperiencePreview(${experienceCounter})"/>
       <br>
       <label>Activity:</label>
-      <input type="text" id="activity${experienceCounter}" oninput="updateExperience(${experienceCounter})"/>
+      <input type="text" id="activity${experienceCounter}" oninput="updateExperiencePreview(${experienceCounter})"/>
     </div>
   `;
 
@@ -181,22 +247,9 @@ function addExperience() {
     input.addEventListener("input", function () {
       // Update the corresponding property in the experience object
       experience[input.id.replace(/\d+/g, "")] = input.value;
-      updatePreview(); // Update the preview after each input change
+      updateExperiencePreview(); // Update the preview after each input change
     });
   });
-}
-
-function updateExperience(index) {
-  var experience = addedExperiences[index - 1];
-
-  // Update the corresponding properties in the experience object
-  experience.orgname = document.getElementById(`orgname${index}`).value;
-  experience.orgadd = document.getElementById(`orgadd${index}`).value;
-  experience.tnr = document.getElementById(`tnr${index}`).value;
-  experience.role = document.getElementById(`role${index}`).value;
-  experience.activity = document.getElementById(`activity${index}`).value;
-
-  updatePreview(); // Update the preview after each input change
 }
 
 function undoExperience() {
@@ -211,7 +264,7 @@ function undoExperience() {
     addedExperiences.pop();
 
     // Update the preview after undoing
-    updatePreview();
+    updateExperiencePreview();
   }
 }
 
@@ -279,7 +332,7 @@ function addEducation() {
     input.addEventListener("input", function () {
       // Update the corresponding property in the education object
       education[input.id.replace(/\d+/g, "")] = input.value;
-      updatePreview(); // Update the preview after each input change
+      updateEducationPreview(); // Update the preview after each input change
     });
   });
 }
@@ -292,7 +345,7 @@ function updateEducation(index) {
   education.eduAddress = document.getElementById(`eduAddress${index}`).value;
   education.eduTenure = document.getElementById(`eduTenure${index}`).value;
 
-  updatePreview(); // Update the preview after each input change
+  updateEducationPreview(); // Update the preview after each input change
 }
 
 function undoEducation() {
@@ -307,7 +360,7 @@ function undoEducation() {
     addedEducations.pop();
 
     // Update the preview after undoing
-    updatePreview();
+    updateEducationPreview();
   }
 }
 
@@ -346,7 +399,7 @@ function addProject() {
     input.addEventListener("input", function () {
       // Update the corresponding property in the project object
       project[input.id.replace(/\d+/g, "")] = input.value;
-      updatePreview(); // Update the preview after each input change
+      updateProjectPreview(); // Update the preview after each input change
     });
   });
 }
@@ -360,7 +413,7 @@ function updateProject(index) {
     `projectDescription${index}`
   ).value;
 
-  updatePreview(); // Update the preview after each input change
+  updateProjectsPreview(); // Update the preview after each input change
 }
 
 function undoProject() {
@@ -375,7 +428,7 @@ function undoProject() {
     addedProjects.pop();
 
     // Update the preview after undoing
-    updatePreview();
+    updateProjectsPreview();
   }
 }
 
@@ -410,7 +463,7 @@ function addSkill() {
     input.addEventListener("input", function () {
       // Update the corresponding property in the skill object
       skill[input.id.replace(/\d+/g, "")] = input.value;
-      updatePreview(); // Update the preview after each input change
+      updateSkillsPreview(); // Update the preview after each input change
     });
   });
 }
@@ -421,7 +474,7 @@ function updateSkill(index) {
   // Update the corresponding property in the skill object
   skill.skillName = document.getElementById(`skillName${index}`).value;
 
-  updatePreview(); // Update the preview after each input change
+  updateSkillsPreview(); // Update the preview after each input change
 }
 
 function undoSkill() {
@@ -436,6 +489,6 @@ function undoSkill() {
     addedSkills.pop();
 
     // Update the preview after undoing
-    updatePreview();
+    updateSkillsPreview();
   }
 }
